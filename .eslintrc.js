@@ -46,5 +46,6 @@ module.exports = {
     'object-curly-newline': 'off',
     'no-unused-vars': 1,
     'react/jsx-wrap-multilines': 0,
+    'comma-dangle': 0,
   },
 };
