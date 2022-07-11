@@ -1,6 +1,6 @@
 /* eslint-disable react/function-component-definition */
 import { Routes, Route } from 'react-router-dom';
-import { UserLoginPage } from './features';
+import { UserChatPage, UserLoginPage, UserRegistrationPage } from './features';
 import { UserAuthProvider } from './services';
 
 export default function App() {
@@ -9,6 +9,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<UserLoginPage />} />
         <Route path="/login" element={<UserLoginPage />} />
+        <Route path="/register" element={<UserRegistrationPage />} />
+        <Route path="/chat" element={<UserChatPage />} />
       </Routes>
     </UserAuthProvider>
   );
