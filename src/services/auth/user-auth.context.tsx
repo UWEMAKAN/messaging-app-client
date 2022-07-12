@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { createContext, useReducer, useMemo } from 'react';
-import { userLoginRequest, userRegistrationRequest, RegistrationDate } from './auth.service';
-import { Action, UserAuthData, UserAuthProps, UserAuthReducer, Props } from './interfaces';
+import { userLoginRequest, userRegistrationRequest } from './auth.service';
+import { RegistrationDate, UserAuthData, UserAuthProps, UserAuthReducer } from './interfaces';
 import {
   START_API_CALL,
   LOGIN_SUCCESS,
@@ -9,6 +9,7 @@ import {
   LOGOUT_SUCCESS,
   API_CALL_FAILURE,
 } from './auth-action-types';
+import { Action, Props } from '../types';
 
 const initialState = {
   isLoading: false,

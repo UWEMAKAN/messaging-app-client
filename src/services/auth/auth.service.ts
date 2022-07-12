@@ -1,13 +1,7 @@
 import axios from 'axios';
+import { RegistrationDate } from './interfaces';
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
-
-export interface RegistrationDate {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
 
 export const userRegistrationRequest = async (body: RegistrationDate): Promise<number> => {
   const url = `${baseUrl}/users`;

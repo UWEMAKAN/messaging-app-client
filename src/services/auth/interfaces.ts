@@ -1,4 +1,12 @@
-import { ReactNode, Reducer } from 'react';
+import { Reducer } from 'react';
+import { Action } from '../types';
+
+export interface RegistrationDate {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
 
 export interface AuthData {
   isLoading: boolean;
@@ -23,15 +31,6 @@ export interface AgentAuthData extends AuthData {
 export interface AgentAuthProps extends AuthMethods, AgentAuthData {}
 
 export interface UserAuthProps extends AuthMethods, UserAuthData {}
-
-export interface Props {
-  children: ReactNode;
-}
-
-export interface Action {
-  type: string;
-  payload: any;
-}
 
 export type UserAuthReducer = Reducer<UserAuthData, Action>;
 export type AgentAuthReducer = Reducer<AgentAuthData, Action>;
