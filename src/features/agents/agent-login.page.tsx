@@ -1,32 +1,31 @@
-import { useContext, useEffect, useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Typography, AlertTitle, Alert, IconButton } from '@mui/material';
+import { AlertTitle, Typography, Alert, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { Container, AppAlert, RegisterForm } from '../../components';
-import { UserAuthContext } from '../../services';
-import { RegistrationData } from '../../services/auth/interfaces';
+import { Container, AppAlert, LoginForm } from '../../components';
+import { AgentAuthContext } from '../../services';
 
-export const UserRegistrationPage = () => {
-  const { register, isLoading, error, isError, userId } = useContext(UserAuthContext);
-  const [isRegError, setIsRegError] = useState(isError);
+export const AgentLoginPage = () => {
+  const { login, isLoading, error, isError, agentId } = useContext(AgentAuthContext);
+  const [loginError, setLoginError] = useState(isError);
 
-  const handleRegister = async (data: RegistrationData) => {
-    await register(data);
+  const handleLogin = async (email: string, password: string) => {
+    await login(email, password);
   };
 
   const handleClose = () => {
-    setIsRegError(false);
+    setLoginError(false);
   };
 
   useEffect(() => {
-    setIsRegError(isError);
+    setLoginError(isError);
   }, [isError]);
 
   return (
     <Container>
       <AppAlert
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={isRegError}
+        open={loginError}
         autoHideDuration={5000}
         onClose={handleClose}
       >
@@ -39,7 +38,7 @@ export const UserRegistrationPage = () => {
                 color="inherit"
                 size="small"
                 onClick={() => {
-                  setIsRegError(false);
+                  setLoginError(false);
                 }}
               >
                 <CloseIcon fontSize="inherit" />
@@ -53,10 +52,10 @@ export const UserRegistrationPage = () => {
         )}
       </AppAlert>
       <Typography variant="h2" mb={2}>
-        Register
+        Agent Login
       </Typography>
-      <RegisterForm isLoading={isLoading} handleRegister={handleRegister} path="/login" />
-      {userId && <Navigate to="/chat" replace />}
+      <LoginForm path="/agents/register" handleLogin={handleLogin} isLoading={isLoading} />
+      {agentId && <Navigate to="/agents/chat" replace />}
     </Container>
   );
 };

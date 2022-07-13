@@ -3,11 +3,11 @@ import { Navigate } from 'react-router-dom';
 import { Typography, AlertTitle, Alert, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Container, AppAlert, RegisterForm } from '../../components';
-import { UserAuthContext } from '../../services';
+import { AgentAuthContext } from '../../services';
 import { RegistrationData } from '../../services/auth/interfaces';
 
-export const UserRegistrationPage = () => {
-  const { register, isLoading, error, isError, userId } = useContext(UserAuthContext);
+export const AgentRegistrationPage = () => {
+  const { register, isLoading, error, isError, agentId } = useContext(AgentAuthContext);
   const [isRegError, setIsRegError] = useState(isError);
 
   const handleRegister = async (data: RegistrationData) => {
@@ -53,10 +53,10 @@ export const UserRegistrationPage = () => {
         )}
       </AppAlert>
       <Typography variant="h2" mb={2}>
-        Register
+        Agent Registration
       </Typography>
-      <RegisterForm isLoading={isLoading} handleRegister={handleRegister} path="/login" />
-      {userId && <Navigate to="/chat" replace />}
+      <RegisterForm path="/agents/login" handleRegister={handleRegister} isLoading={isLoading} />
+      {agentId && <Navigate to="/agents/chat" replace />}
     </Container>
   );
 };

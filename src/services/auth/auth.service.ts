@@ -27,7 +27,7 @@ export const agentRegistrationRequest = async (body: RegistrationData): Promise<
   const url = `${baseUrl}/agents`;
   try {
     const { data } = await axios.post(url, body);
-    return data.userId;
+    return data.agentId;
   } catch (err: any) {
     throw err.response.data;
   }
@@ -37,7 +37,7 @@ export const agentLoginRequest = async (email: string, password: string): Promis
   const url = `${baseUrl}/auth/login/agents`;
   try {
     const { data } = await axios.post(url, { email, password });
-    return data.userId;
+    return data.agentId;
   } catch (err: any) {
     throw err.response.data;
   }

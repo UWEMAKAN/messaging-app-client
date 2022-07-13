@@ -1,13 +1,15 @@
 /* eslint-disable react/function-component-definition */
 import { RootNavigator } from './root.navigation';
-import { UserAuthProvider, UserChatProvider } from './services';
+import { AgentAuthProvider, UserAuthProvider, UserChatProvider } from './services';
 
 export default function App() {
   return (
     <UserAuthProvider>
-      <UserChatProvider>
-        <RootNavigator />
-      </UserChatProvider>
+      <AgentAuthProvider>
+        <UserChatProvider>
+          <RootNavigator />
+        </UserChatProvider>
+      </AgentAuthProvider>
     </UserAuthProvider>
   );
 }

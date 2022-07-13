@@ -68,7 +68,6 @@ export const AgentAuthProvider = ({ children }: Props) => {
   };
 
   const logout = () => {
-    console.log('Logging out');
     dispatch({ type: LOGIN_SUCCESS, payload: null });
   };
 
