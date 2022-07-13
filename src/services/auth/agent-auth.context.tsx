@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { createContext, useReducer, useMemo } from 'react';
 import { agentLoginRequest, agentRegistrationRequest } from './auth.service';
-import { AgentAuthData, AgentAuthProps, AgentAuthReducer, RegistrationDate } from './interfaces';
+import { AgentAuthData, AgentAuthProps, AgentAuthReducer, RegistrationData } from './interfaces';
 import {
   START_API_CALL,
   LOGIN_SUCCESS,
@@ -45,7 +45,7 @@ export const AgentAuthProvider = ({ children }: Props) => {
   const [state, dispatch] = useReducer(reducer as AgentAuthReducer, initialState);
   const { agentId, isLoading, error, isError } = state;
 
-  const register = async (data: RegistrationDate) => {
+  const register = async (data: RegistrationData) => {
     dispatch({ type: START_API_CALL, payload: null });
     try {
       const id = await agentRegistrationRequest(data);

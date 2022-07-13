@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { createContext, useReducer, useMemo } from 'react';
 import { userLoginRequest, userRegistrationRequest } from './auth.service';
-import { RegistrationDate, UserAuthData, UserAuthProps, UserAuthReducer } from './interfaces';
+import { RegistrationData, UserAuthData, UserAuthProps, UserAuthReducer } from './interfaces';
 import {
   START_API_CALL,
   LOGIN_SUCCESS,
@@ -45,7 +45,7 @@ export const UserAuthProvider = ({ children }: Props) => {
   const [state, dispatch] = useReducer(reducer as UserAuthReducer, initialState);
   const { userId, isLoading, error, isError } = state;
 
-  const register = async (data: RegistrationDate) => {
+  const register = async (data: RegistrationData) => {
     dispatch({ type: START_API_CALL, payload: null });
     try {
       const id = await userRegistrationRequest(data);

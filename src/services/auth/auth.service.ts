@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { RegistrationDate } from './interfaces';
+import { RegistrationData } from './interfaces';
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
-export const userRegistrationRequest = async (body: RegistrationDate): Promise<number> => {
+export const userRegistrationRequest = async (body: RegistrationData): Promise<number> => {
   const url = `${baseUrl}/users`;
   try {
     const { data } = await axios.post(url, body);
@@ -23,7 +23,7 @@ export const userLoginRequest = async (email: string, password: string): Promise
   }
 };
 
-export const agentRegistrationRequest = async (body: RegistrationDate): Promise<number> => {
+export const agentRegistrationRequest = async (body: RegistrationData): Promise<number> => {
   const url = `${baseUrl}/agents`;
   try {
     const { data } = await axios.post(url, body);

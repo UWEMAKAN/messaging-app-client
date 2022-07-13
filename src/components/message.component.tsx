@@ -11,14 +11,15 @@ interface MessageProps {
   body: string;
   createdAt: string;
   sender: string;
+  invert?: boolean;
 }
 
 export const MessageComponent = (props: MessageProps) => {
-  const { body, createdAt, sender } = props;
+  const { body, createdAt, sender, invert } = props;
   const dateTime = new Date(createdAt);
   const date = dateTime.toLocaleDateString();
   const time = dateTime.toTimeString().substring(0, 5);
-  return sender === 'USER' ? (
+  return sender === 'USER' && !invert ? (
     <UserMessageContainer>
       <Typography mb={2}>{body}</Typography>
       <MessageDateTime>
@@ -35,4 +36,8 @@ export const MessageComponent = (props: MessageProps) => {
       </MessageDateTime>
     </AgentMessageContainer>
   );
+};
+
+MessageComponent.defaultProps = {
+  invert: false,
 };

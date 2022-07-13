@@ -1,7 +1,7 @@
 import { Reducer } from 'react';
 import { Action } from '../types';
 
-export interface RegistrationDate {
+export interface RegistrationData {
   firstName: string;
   lastName: string;
   email: string;

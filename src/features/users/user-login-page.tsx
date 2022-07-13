@@ -1,25 +1,15 @@
 import { useState, useContext, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import {
-  AlertTitle,
-  Button,
-  Typography,
-  CircularProgress,
-  Alert,
-  IconButton,
-  Link,
-} from '@mui/material';
+import { AlertTitle, Typography, Alert, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { Container, Form, TextInput, ButtonContainer, AppAlert } from '../../components';
+import { Container, AppAlert, LoginForm } from '../../components';
 import { UserAuthContext } from '../../services';
 
 export const UserLoginPage = () => {
   const { login, isLoading, error, isError, userId } = useContext(UserAuthContext);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(isError);
 
-  const handleButtonClick = async () => {
+  const handleLogin = async (email: string, password: string) => {
     await login(email, password);
   };
 
@@ -64,46 +54,8 @@ export const UserLoginPage = () => {
       <Typography variant="h2" mb={2}>
         Login
       </Typography>
-      <Form>
-        <TextInput
-          variant="filled"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          type="email"
-          label="Email"
-        />
-        <TextInput
-          variant="filled"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          type="password"
-          label="Password"
-        />
-        <ButtonContainer>
-          <Button
-            variant="contained"
-            disabled={isLoading}
-            onClick={handleButtonClick}
-            style={{ width: '100%' }}
-          >
-            Login
-          </Button>
-          {isLoading && (
-            <CircularProgress
-              size={24}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                marginTop: '-12px',
-                marginLeft: '-12px',
-              }}
-            />
-          )}
-        </ButtonContainer>
-        <Link href="/register">Register</Link>
-        {userId && <Navigate to="/chat" replace />}
-      </Form>
+      <LoginForm path="/register" isLoading={isLoading} handleLogin={handleLogin} />
+      {userId && <Navigate to="/chat" replace />}
     </Container>
   );
 };
