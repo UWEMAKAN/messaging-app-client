@@ -1,6 +1,12 @@
 import styled from '@emotion/styled';
 import { TextField, Typography, Snackbar } from '@mui/material';
 
+export const Body = styled.div`
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+`;
+
 export const Container = styled.div`
   position: relative;
   height: 100vh;
@@ -73,20 +79,18 @@ export const AgentMessageContainer = styled.div`
 
 export const MessageText = styled.div``;
 
-export const MessageDateTime = styled.div`
+export const MessageRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
 export const MessageTime = styled(Typography)`
-  align-self: flex-end;
   margin-left: 20px;
 `;
 
 export const MessageDate = styled(Typography)`
-  align-self: flex-start;
-  margin-right: 20px;
+  margin-left: 20px;
 `;
 
 export const TextArea = styled(TextField)`
@@ -105,4 +109,18 @@ export const LogoutContainer = styled.div`
   position: fixed;
   top: 20px;
   right: 90px;
+`;
+
+export const MessageItem = styled.div`
+  padding: 4px 24px;
+  display: flex;
+  align-items: center;
+`;
+
+export const MessageColumn = styled.div`
+  margin-top: 8px;
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  margin-left: 16px;
 `;

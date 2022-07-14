@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useState } from 'react';
 import { UserAuthContext } from '../auth/user-auth.context';
 import { Action, Props } from '../types';
-import { NEW_MESSAGE } from './chat-action-types.constant';
+import { CHAT_ERROR, NEW_MESSAGE } from './chat-action-types.constant';
 import { sendUserMessage } from './chat.service';
-import { ChatData, ChatDataProps, Message, UserChatReducer, UserMessageData } from './interfaces';
+import { ChatData, ChatDataProps, Message, ChatReducer, MessageData } from './interfaces';
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -28,13 +28,19 @@ export const UserChatContext = createContext({} as ChatDataProps);
 
 export const UserChatProvider = ({ children }: Props) => {
   const { userId } = useContext(UserAuthContext);
-  const [state, dispatch] = useReducer(reducer as UserChatReducer, initialState);
-  const { chatError, isLoadingChat, messages } = state;
+  const [state, dispatch] = useReducer(reducer as ChatReducer, initialState);
+  const { chatError, messages } = state;
   const [source, setSource] = useState({} as EventSource);
 
-  const sendMessage = async (data: UserMessageData) => {
-    const response = await sendUserMessage(data);
-    dispatch({ type: NEW_MESSAGE, payload: response });
+  const sendMessage = async (data: MessageData) => {
+    try {
+      const response = await sendUserMessage({ ...data, userId });
+      dispatch({ type: NEW_MESSAGE, payload: response });
+    } catch (err: any) {
+      const { statusCode, message } = err;
+      const error = statusCode < 500 ? message : 'Server error';
+      dispatch({ type: CHAT_ERROR, payload: error });
+    }
   };
 
   const pushMessage = (message: Message) => {
@@ -61,8 +67,8 @@ export const UserChatProvider = ({ children }: Props) => {
   }, [userId]);
 
   const value = useMemo(
-    () => ({ chatError, isLoadingChat, messages, sendMessage, pushMessage }),
-    [chatError, isLoadingChat, messages],
+    () => ({ chatError, messages, sendMessage }),
+    [chatError, messages],
   );
   return <UserChatContext.Provider value={value}>{children}</UserChatContext.Provider>;
 };

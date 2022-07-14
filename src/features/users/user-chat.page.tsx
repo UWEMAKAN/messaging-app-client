@@ -10,6 +10,7 @@ import {
   FileInput,
   LogoutContainer,
   MessageComponent,
+  Body,
 } from '../../components';
 import { UserAuthContext, UserChatContext } from '../../services';
 
@@ -41,42 +42,44 @@ export const UserChatPage = () => {
   ));
 
   return (
-    <Container>
-      <LogoutContainer>
-        <Link href="/login" underline="none">
-          <Button
-            onClick={() => {
-              logout();
-            }}
-            startIcon={<PowerSettingsNew />}
-            variant="text"
-          >
-            Logout
-          </Button>
-        </Link>
-      </LogoutContainer>
-      <ChatArea>
-        {chats}
-        <p ref={messagesEndRef} />
-      </ChatArea>
-      <TypingArea>
-        <label htmlFor="icon-button-file">
-          <FileInput accept="image/*" id="icon-button-file" type="file" />
-          <IconButton color="primary" aria-label="upload picture" component="span">
-            <AttachFile />
-          </IconButton>
-        </label>
-        <TextArea
-          fullWidth
-          size="small"
-          variant="outlined"
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-          type="text"
-          placeholder="Type message..."
-          onKeyUp={handleSubmitMessage}
-        />
-      </TypingArea>
-    </Container>
+    <Body>
+      <Container>
+        <LogoutContainer>
+          <Link href="/login" underline="none">
+            <Button
+              onClick={() => {
+                logout();
+              }}
+              startIcon={<PowerSettingsNew />}
+              variant="text"
+            >
+              Logout
+            </Button>
+          </Link>
+        </LogoutContainer>
+        <ChatArea>
+          {chats}
+          <p ref={messagesEndRef} />
+        </ChatArea>
+        <TypingArea>
+          <label htmlFor="icon-button-file">
+            <FileInput accept="image/*" id="icon-button-file" type="file" />
+            <IconButton color="primary" aria-label="upload picture" component="span">
+              <AttachFile />
+            </IconButton>
+          </label>
+          <TextArea
+            fullWidth
+            size="small"
+            variant="outlined"
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+            type="text"
+            placeholder="Type message..."
+            onKeyUp={handleSubmitMessage}
+          />
+        </TypingArea>
+      </Container>
+    </Body>
   );
 };

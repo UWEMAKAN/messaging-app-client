@@ -2,10 +2,11 @@
 import { Reducer } from 'react';
 import { Action } from '../types';
 
-export interface UserMessageData {
+export interface MessageData {
   userId: number;
   body: string;
   type: string;
+  agentId?: number;
 }
 
 export interface Message {
@@ -15,17 +16,31 @@ export interface Message {
   sender: string;
   createdAt: string;
   type: string;
+  priority?: number;
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface UserDetails {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  messages: Message[];
+  createdAt: string;
 }
 
 export interface ChatData {
   messages: Message[];
-  isLoadingChat: boolean;
+  isLoadingChat?: boolean;
   chatError: string;
+  conversations?: UserDetails[];
 }
 
 export interface ChatDataProps extends ChatData {
-  sendMessage: (data: UserMessageData) => Promise<void>;
-  pushMessage: (msg: Message) => void;
+  sendMessage: (data: MessageData) => Promise<void>;
+  openConversation?: (userId: number) => Promise<void>;
+  closeConversation?: (userId: number) => Promise<void>;
 }
 
-export type UserChatReducer = Reducer<ChatData, Action>;
+export type ChatReducer = Reducer<ChatData, Action>;
