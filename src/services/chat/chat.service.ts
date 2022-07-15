@@ -52,3 +52,13 @@ export const getUserMessages = async (userId: number) => {
     throw err.response.data;
   }
 };
+
+export const getAgentMessages = async (agentId: number, duration: string) => {
+  const url = `${baseUrl}/agents/messages?duration=${duration}`;
+  try {
+    const { data } = await axios.get(url);
+    return data;
+  } catch (err: any) {
+    throw err.response.data;
+  }
+};
