@@ -32,7 +32,7 @@ export interface UserDetails {
 
 export interface ChatData {
   messages: Message[];
-  isLoadingChat?: boolean;
+  isLoadingChat: boolean;
   chatError: string;
   conversations?: UserDetails[];
 }

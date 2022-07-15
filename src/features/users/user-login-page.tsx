@@ -37,9 +37,7 @@ export const UserLoginPage = () => {
                 aria-label="close"
                 color="inherit"
                 size="small"
-                onClick={() => {
-                  setLoginError(false);
-                }}
+                onClick={() => handleClose()}
               >
                 <CloseIcon fontSize="inherit" />
               </IconButton>
