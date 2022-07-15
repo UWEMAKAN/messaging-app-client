@@ -90,7 +90,6 @@ export const MessageTime = styled(Typography)`
 `;
 
 export const MessageDate = styled(Typography)`
-  margin-left: 20px;
 `;
 
 export const TextArea = styled(TextField)`

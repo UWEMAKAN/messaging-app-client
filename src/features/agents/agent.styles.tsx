@@ -1,7 +1,5 @@
 /* eslint-disable react/destructuring-assignment */
 import styled from '@emotion/styled';
-import { Typography } from '@mui/material';
-import { stringToColor } from '../../components';
 
 export const TypingArea = styled.div`
   flex-basis: 1;
@@ -27,9 +25,19 @@ export const HorizontalContainer = styled.div`
 
 export const ChatListArea = styled.div`
   width: 25%;
-  flex-grow: 0;
-  padding: 48px 0;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const ChatList = styled.div`
+  flex: 1;
+  padding: 0 0 24px 0;
   overflow-y: scroll;
+`;
+
+export const FilterArea = styled.div`
+  flex-basis: 0;
+  padding: 24px 20px 8px 20px;
 `;
 
 export const MessageArea = styled.div`
@@ -69,31 +77,8 @@ export const LogoutContainer = styled.div`
   right: 156px;
 `;
 
-interface Props {
-  firstName: string;
-  lastName: string;
-}
-
-export const BigAvatar = ({ firstName, lastName }: Props) => {
-  const color = stringToColor(firstName + lastName);
-  const Avatar = styled.div`
-  height: 96px;
-  width: 96px;
-  border-radius: 100%;
+export const Row = styled.div`
   display: flex;
-  background-color: ${color};
-  justify-content: center;
-  align-items: center;
-  align-self: center;
+  justify-content: space-between;
+  align-items: flex-start;
 `;
-  const f = firstName[0].toUpperCase();
-  const l = lastName[0].toUpperCase();
-  return (
-    <Avatar>
-      <Typography color="white" variant="h4">
-        {f}
-        {l}
-      </Typography>
-    </Avatar>
-  );
-};

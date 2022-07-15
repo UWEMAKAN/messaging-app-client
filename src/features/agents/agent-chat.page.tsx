@@ -1,37 +1,63 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable operator-linebreak */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { AttachFile, PowerSettingsNew } from '@mui/icons-material';
-import { Button, Divider, IconButton, Link, Typography } from '@mui/material';
+import { Button, Divider, IconButton, Link, TextField } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Body, FileInput, MessageComponent, MessageListItem, TextArea } from '../../components';
+import { SelectDuration } from './select-duration.component';
 import { AgentAuthContext, AgentChatContext } from '../../services';
-import { UserDetails } from '../../services/chat/interfaces';
+import { Durations, Message, UserDetails } from '../../services/chat/interfaces';
 import {
-  BigAvatar,
+  ChatList,
   ChatListArea,
   Container,
+  FilterArea,
   HorizontalContainer,
-  Info,
   LogoutContainer,
   MessageArea,
   ProfileArea,
-  ProfileInfo,
+  Row,
   TypingArea,
 } from './agent.styles';
+import { Profile } from './profile.component';
+import { ToggleMyTickets } from './toggle.component';
 
 export const AgentChatPage = () => {
   const { logout } = useContext(AgentAuthContext);
-  const { messages, conversations, openConversation, sendMessage } = useContext(AgentChatContext);
+  const { messages, conversations, duration, setDuration, openConversation, sendMessage } =
+    useContext(AgentChatContext);
   const [selected, setSelected] = useState(0);
   const [details, setDetails] = useState({} as UserDetails);
   const messagesEndRef = useRef({} as any);
   const [text, setText] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredMessages, setFilteredMessages] = useState([] as Message[]);
 
   const handleSubmitMessage = async (event: any) => {
     event?.preventDefault();
     if (event.code === 'Enter' && selected) {
       await sendMessage({ userId: selected, body: text, type: 'TEXT' });
       setText('');
+    }
+  };
+
+  useEffect(() => {
+    if (searchTerm) {
+      const lower = searchTerm.toLowerCase();
+      const filtered = messages.filter(
+        (v) =>
+          v.body.toLowerCase().includes(lower) ||
+          v.lastName?.toLowerCase().includes(lower) ||
+          v.firstName?.toLowerCase().includes(lower),
+      );
+      setFilteredMessages(filtered);
+    }
+  }, [searchTerm]);
+
+  const handleSetDuration = (d: string) => {
+    if (setDuration) {
+      setDuration(d);
     }
   };
 
@@ -50,11 +76,13 @@ export const AgentChatPage = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleToggle = () => {};
+
   useEffect(() => {
     scrollToBottom();
   }, [details.messages]);
 
-  const list = messages.map((m) => (
+  const chatList = filteredMessages.map((m) => (
     <MessageListItem
       selectChat={() => {
         setSelected(m.userId);
@@ -89,8 +117,26 @@ export const AgentChatPage = () => {
           </Link>
         </LogoutContainer>
         <ChatListArea>
+          <FilterArea>
+            <Row>
+              <ToggleMyTickets handleToggle={handleToggle} />
+              <SelectDuration
+                duration={duration || Durations.ONE_DAY}
+                setDuration={handleSetDuration}
+              />
+            </Row>
+            <TextField
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              size="small"
+              margin="normal"
+              fullWidth
+              type="search"
+              placeholder="Search..."
+            />
+          </FilterArea>
           <Divider />
-          {list}
+          <ChatList>{chatList}</ChatList>
         </ChatListArea>
         <Container>
           <MessageArea>
@@ -118,27 +164,11 @@ export const AgentChatPage = () => {
         </Container>
         <ProfileArea>
           {details.id && (
-            <>
-              <BigAvatar firstName={details.firstName} lastName={details.lastName} />
-              <ProfileInfo>
-                <Info>
-                  <Typography variant="body1">Name</Typography>
-                  <Typography variant="body1">{`${details.firstName} ${details.lastName}`}</Typography>
-                </Info>
-                <Info>
-                  <Typography variant="body1">Email</Typography>
-                  <Typography variant="body1">{details.email}</Typography>
-                </Info>
-                <Info>
-                  <Typography variant="body1">Phone number</Typography>
-                  <Typography variant="body1">+234 907 453 7825</Typography>
-                </Info>
-                <Info>
-                  <Typography variant="body1">Location</Typography>
-                  <Typography variant="body1">Lagos, Nigeria</Typography>
-                </Info>
-              </ProfileInfo>
-            </>
+            <Profile
+              firstName={details.firstName}
+              lastName={details.lastName}
+              email={details.email}
+            />
           )}
         </ProfileArea>
       </HorizontalContainer>
