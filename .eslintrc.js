@@ -47,5 +47,6 @@ module.exports = {
     'no-unused-vars': 1,
     'react/jsx-wrap-multilines': 0,
     'comma-dangle': 0,
+    'operator-linebreak': 0,
   },
 };

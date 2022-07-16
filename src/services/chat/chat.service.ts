@@ -53,8 +53,28 @@ export const getUserMessages = async (userId: number) => {
   }
 };
 
-export const getAgentMessages = async (agentId: number, duration: string) => {
+export const getAgentMessages = async (duration: string) => {
   const url = `${baseUrl}/agents/messages?duration=${duration}`;
+  try {
+    const { data } = await axios.get(url);
+    return data;
+  } catch (err: any) {
+    throw err.response.data;
+  }
+};
+
+export const getStockMessages = async () => {
+  const url = `${baseUrl}/agents/messages/stock`;
+  try {
+    const { data } = await axios.get(url);
+    return data;
+  } catch (err: any) {
+    throw err.response.data;
+  }
+};
+
+export const getTickets = async () => {
+  const url = `${baseUrl}/agents/tickets`;
   try {
     const { data } = await axios.get(url);
     return data;

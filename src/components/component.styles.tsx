@@ -77,7 +77,9 @@ export const AgentMessageContainer = styled.div`
   max-width: 50%;
 `;
 
-export const MessageText = styled.div``;
+export const MessageText = styled.div`
+  width: 250px;
+`;
 
 export const MessageRow = styled.div`
   display: flex;
@@ -111,6 +113,7 @@ export const LogoutContainer = styled.div`
 `;
 
 export const MessageItem = styled.div`
+  position: relative;
   padding: 4px 24px;
   display: flex;
   align-items: center;
@@ -122,4 +125,10 @@ export const MessageColumn = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 16px;
+`;
+
+export const CheckIconWrapper = styled.div`
+  position: absolute;
+  right: 15%;
+  bottom: 6%;
 `;

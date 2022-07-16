@@ -16,6 +16,6 @@ export const ToggleMyTickets = ({ handleToggle }: Props) => (
     <InputLabel style={{ color: 'black', marginRight: 10 }}>
       My tickets
     </InputLabel>
-    <Switch onChange={(e) => handleToggle(e.target.value)} color="primary" />
+    <Switch onChange={() => handleToggle()} color="primary" />
   </Row>
 );

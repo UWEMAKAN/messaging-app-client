@@ -1,96 +1,61 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useState } from 'react';
 import {
-  ChatData,
-  ChatDataProps,
-  ChatReducer,
+  AgentChatDataProps,
+  AgentChatReducer,
   Durations,
   Message,
   MessageData,
+  TicketEvent,
 } from './interfaces';
-import { Action, Props } from '../types';
+import { Props } from '../types';
 import {
   CHAT_ERROR,
   GET_MESSAGES,
+  GET_STOCK_MESSAGES,
+  GET_TICKETS,
   LOADING_CONTENT,
   NEW_MESSAGE,
+  NEW_TICKET,
   SET_DURATION,
   USER_DETAILS,
 } from './chat-action-types.constant';
 import { AgentAuthContext } from '../auth/agent-auth.context';
-import { closeChat, getAgentMessages, getUserDetails, sendAgentMessage } from './chat.service';
+import {
+  closeChat,
+  getAgentMessages,
+  getStockMessages,
+  getTickets,
+  getUserDetails,
+  sendAgentMessage,
+} from './chat.service';
+import { reducer } from './agent-reducer';
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 const initialState = {
+  myTickets: false,
   isLoadingChat: false,
   messages: [],
   conversations: [],
   duration: Durations.ONE_DAY,
-} as unknown as ChatDataProps;
+  tickets: [],
+  stockMessages: [],
+} as unknown as AgentChatDataProps;
 
-// eslint-disable-next-line default-param-last
-const reducer = (state = {} as ChatData, { type, payload }: Action) => {
-  switch (type) {
-    case NEW_MESSAGE: {
-      const conversations = state.conversations?.map((v) => {
-        if (v.id === payload.userId) {
-          const found = v.messages.find((m) => m.id === payload.id);
-          if (!found) {
-            v.messages.push({
-              id: payload.id,
-              userId: payload.userId,
-              body: payload.body,
-              sender: payload.sender,
-              createdAt: payload.createdAt,
-              type: payload.type,
-              priority: payload.priority,
-            });
-          }
-        }
-        return v;
-      });
-      const messages = state.messages.filter((v) => v.userId !== payload.userId);
-      return {
-        ...state,
-        messages: [payload, ...messages],
-        conversations,
-        chatError: '',
-        isLoadingChat: false,
-      };
-    }
-    case LOADING_CONTENT: {
-      return { ...state, isLoadingChat: true, chatError: '' };
-    }
-    case GET_MESSAGES: {
-      return { ...state, messages: [...payload], chatError: '', isLoadingChat: false };
-    }
-    case USER_DETAILS: {
-      const conversations = state.conversations || [];
-      return {
-        ...state,
-        conversations: [...conversations, payload],
-        isLoadingChat: false,
-        chatError: '',
-      };
-    }
-    case CHAT_ERROR: {
-      return { ...state, chatError: payload, isLoadingChat: false };
-    }
-    case SET_DURATION: {
-      return { ...state, duration: payload };
-    }
-    default: {
-      return state;
-    }
-  }
-};
-
-export const AgentChatContext = createContext({} as ChatDataProps);
+export const AgentChatContext = createContext({} as AgentChatDataProps);
 
 export const AgentChatProvider = ({ children }: Props) => {
   const { agentId } = useContext(AgentAuthContext);
-  const [state, dispatch] = useReducer(reducer as ChatReducer, initialState);
-  const { chatError, isLoadingChat, messages, conversations, duration } = state;
+  const [state, dispatch] = useReducer(reducer as AgentChatReducer, initialState);
+  const {
+    chatError,
+    isLoadingChat,
+    messages,
+    conversations,
+    duration,
+    tickets,
+    stockMessages,
+  } = state;
   const [source, setSource] = useState({} as EventSource);
 
   const sendMessage = async (data: MessageData) => {
@@ -132,8 +97,10 @@ export const AgentChatProvider = ({ children }: Props) => {
 
   const getMessages = () => {
     if (duration && agentId) {
-      getAgentMessages(agentId, duration)
-        .then((data) => dispatch({ type: GET_MESSAGES, payload: data }))
+      getAgentMessages(duration)
+        .then((data) => {
+          dispatch({ type: GET_MESSAGES, payload: data });
+        })
         .catch((err: any) => {
           const { statusCode, message } = err;
           const error = statusCode < 500 ? message : 'Server error';
@@ -146,6 +113,31 @@ export const AgentChatProvider = ({ children }: Props) => {
     dispatch({ type: SET_DURATION, payload });
   };
 
+  const updateTicket = (event: TicketEvent) => {
+    dispatch({ type: NEW_TICKET, payload: event });
+  };
+
+  useEffect(() => {
+    getTickets()
+      .then((data) => dispatch({ type: GET_TICKETS, payload: data }))
+      .catch((err: any) => {
+        const { statusCode, message } = err;
+        const error = statusCode < 500 ? message : 'Server error';
+        dispatch({ type: CHAT_ERROR, payload: error });
+      });
+    getStockMessages()
+      .then((data) => dispatch({ type: GET_STOCK_MESSAGES, payload: data }))
+      .catch((err: any) => {
+        const { statusCode, message } = err;
+        const error = statusCode < 500 ? message : 'Server error';
+        dispatch({ type: CHAT_ERROR, payload: error });
+      });
+  }, []);
+
+  useEffect(() => {
+    getMessages();
+  }, [agentId, duration]);
+
   useEffect(() => {
     if (source.readyState === undefined && agentId) {
       const src = new EventSource(`${baseUrl}/agents/${agentId}/subscribe`);
@@ -153,6 +145,16 @@ export const AgentChatProvider = ({ children }: Props) => {
         const msg = JSON.parse(ev.data);
         pushMessage(msg);
       };
+
+      src.addEventListener('assignment', (e) => {
+        const data = JSON.parse(e.data);
+        updateTicket(data);
+      });
+
+      src.addEventListener('stock-message', (e) => {
+        const data = JSON.parse(e.data);
+        dispatch({ type: GET_STOCK_MESSAGES, payload: data });
+      });
 
       // eslint-disable-next-line no-unused-vars
       src.onerror = (err) => {
@@ -164,10 +166,6 @@ export const AgentChatProvider = ({ children }: Props) => {
     }
   }, [agentId]);
 
-  useEffect(() => {
-    getMessages();
-  }, [agentId, duration]);
-
   const value = useMemo(
     () => ({
       chatError,
@@ -175,12 +173,14 @@ export const AgentChatProvider = ({ children }: Props) => {
       conversations,
       isLoadingChat,
       duration,
+      tickets,
+      stockMessages,
       sendMessage,
       openConversation,
       closeConversation,
       setDuration,
     }),
-    [chatError, messages, conversations, isLoadingChat, duration],
+    [chatError, messages, conversations, isLoadingChat, duration, tickets, stockMessages],
   );
 
   return <AgentChatContext.Provider value={value}>{children}</AgentChatContext.Provider>;
