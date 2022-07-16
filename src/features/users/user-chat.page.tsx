@@ -48,7 +48,7 @@ export const UserChatPage = () => {
     if (messages.length) {
       scrollToBottom();
     }
-  }, [messages]);
+  }, [messages.length]);
 
   const chats = messages.map((m) => (
     <MessageComponent key={m.id} body={m.body} sender={m.sender} createdAt={m.createdAt} />

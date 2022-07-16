@@ -13,6 +13,15 @@ export enum Durations {
   ONE_YEAR = 'ONE_YEAR',
 }
 
+export interface Ticket {
+  agentId: number;
+  userId: number;
+}
+
+export interface TicketEvent extends Ticket {
+  assigned: boolean;
+}
+
 export interface MessageData {
   userId: number;
   body: string;
@@ -45,15 +54,24 @@ export interface ChatData {
   messages: Message[];
   isLoadingChat: boolean;
   chatError: string;
-  conversations?: UserDetails[];
-  duration?: string;
+}
+
+export interface AgentChatData extends ChatData {
+  conversations: UserDetails[];
+  duration: string;
+  tickets: Ticket[];
+  stockMessages: string[];
 }
 
 export interface ChatDataProps extends ChatData {
   sendMessage: (data: MessageData) => Promise<void>;
-  openConversation?: (userId: number) => Promise<void>;
-  closeConversation?: (userId: number) => Promise<void>;
-  setDuration?: (payload: string) => void;
+}
+
+export interface AgentChatDataProps extends AgentChatData, ChatDataProps {
+  openConversation: (userId: number) => Promise<void>;
+  closeConversation: (userId: number) => Promise<void>;
+  setDuration: (payload: string) => void;
 }
 
 export type ChatReducer = Reducer<ChatData, Action>;
+export type AgentChatReducer = Reducer<AgentChatData, Action>;

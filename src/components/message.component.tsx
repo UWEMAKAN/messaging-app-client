@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/jsx-one-expression-per-line */
 import { Avatar, Divider, Typography } from '@mui/material';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import {
   UserMessageContainer,
   MessageRow,
@@ -9,6 +10,8 @@ import {
   AgentMessageContainer,
   MessageItem,
   MessageColumn,
+  CheckIconWrapper,
+  MessageText,
 } from './component.styles';
 
 interface MessageProps {
@@ -47,6 +50,7 @@ MessageComponent.defaultProps = {
   invert: false,
 };
 interface Props {
+  assigned: boolean;
   body: string;
   createdAt: string;
   firstName: string;
@@ -82,25 +86,34 @@ export const stringAvatar = (firstName: string, lastName: string) => ({
 });
 
 export const MessageListItem = (props: Props) => {
-  const { body, createdAt, selectChat, firstName, lastName } = props;
+  const { body, createdAt, selectChat, firstName, lastName, assigned } = props;
   const dateTime = new Date(createdAt);
   const date = dateTime.toLocaleDateString();
   const time = dateTime.toTimeString().substring(0, 5);
   return (
     <>
       <MessageItem onClick={selectChat}>
+        {assigned && (
+          <CheckIconWrapper>
+            <TaskAltIcon color="success" />
+          </CheckIconWrapper>
+        )}
         <Avatar {...stringAvatar(firstName, lastName)} />
         <MessageColumn>
           <MessageRow>
-            <Typography mb={1} noWrap>
-              {firstName} {lastName}
-            </Typography>
+            <MessageText>
+              <Typography mb={1} noWrap>
+                {firstName} {lastName}
+              </Typography>
+            </MessageText>
             <MessageDate variant="caption">{date}</MessageDate>
           </MessageRow>
           <MessageRow>
-            <Typography mb={1} noWrap>
-              {body}
-            </Typography>
+            <MessageText>
+              <Typography mb={1} noWrap>
+                {body}
+              </Typography>
+            </MessageText>
             <MessageTime variant="caption">{time}</MessageTime>
           </MessageRow>
         </MessageColumn>

@@ -43,13 +43,14 @@ export const FilterArea = styled.div`
 export const MessageArea = styled.div`
   background-color: #f1f1f1;
   display: flex;
-  padding: 25px 100px;
+  padding: 24px 96px 0 96px;
   flex-direction: column;
   flex: auto;
   overflow-y: scroll;
 `;
 
 export const ProfileArea = styled.div`
+  position: relative;
   width: 25%;
   display: flex;
   flex-direction: column;
@@ -72,6 +73,7 @@ export const Info = styled.div`
 `;
 
 export const LogoutContainer = styled.div`
+  z-index: 2;
   position: fixed;
   bottom: 20px;
   right: 156px;
@@ -81,4 +83,27 @@ export const Row = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+`;
+
+export const QuickResponses = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 1;
+`;
+
+export const ChatMessages = styled.div`
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const ChipWrapper = styled.div`
+  margin-right: 8px;
+  margin-top: 8px;
+`;
+
+export const EndSessionButtonWrapper = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 20px;
 `;
