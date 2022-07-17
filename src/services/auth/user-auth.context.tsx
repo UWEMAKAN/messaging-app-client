@@ -13,7 +13,7 @@ import { Action, Props } from '../types';
 
 const initialState = {
   isLoading: false,
-  isError: false,
+  error: '',
 } as UserAuthData;
 
 // eslint-disable-next-line default-param-last
@@ -43,7 +43,7 @@ export const UserAuthContext = createContext({} as UserAuthProps);
 
 export const UserAuthProvider = ({ children }: Props) => {
   const [state, dispatch] = useReducer(reducer as UserAuthReducer, initialState);
-  const { userId, isLoading, error, isError } = state;
+  const { userId, isLoading, error } = state;
 
   const register = async (data: RegistrationData) => {
     dispatch({ type: START_API_CALL, payload: null });
@@ -77,12 +77,11 @@ export const UserAuthProvider = ({ children }: Props) => {
       isLoading,
       userId,
       error,
-      isError,
       register,
       login,
       logout,
     }),
-    [isError, isLoading, userId, error],
+    [isLoading, userId, error],
   );
 
   return <UserAuthContext.Provider value={value}>{children}</UserAuthContext.Provider>;

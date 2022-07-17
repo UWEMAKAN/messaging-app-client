@@ -11,7 +11,6 @@ export interface RegistrationData {
 export interface AuthData {
   isLoading: boolean;
   error: string;
-  isError: boolean;
 }
 
 export interface AuthMethods {

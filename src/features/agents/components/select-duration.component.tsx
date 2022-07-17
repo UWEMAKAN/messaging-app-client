@@ -1,6 +1,6 @@
 import { InputLabel, MenuItem, Select } from '@mui/material';
 import styled from '@emotion/styled';
-import { Durations } from '../../services/chat/interfaces';
+import { Durations } from '../../../services/chat/interfaces';
 
 const Row = styled.div`
   display: flex;

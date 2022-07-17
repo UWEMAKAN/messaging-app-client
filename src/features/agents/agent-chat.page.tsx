@@ -1,47 +1,39 @@
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable operator-linebreak */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import { AttachFile, PowerSettingsNew } from '@mui/icons-material';
-import {
-  Button,
-  Chip,
-  Divider,
-  IconButton,
-  Alert,
-  AlertTitle,
-  Link,
-  TextField,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Chip, Divider, TextField } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import {
-  AppAlert,
   Body,
-  FileInput,
+  ErrorAlert,
+  LogoutButton,
   MessageComponent,
   MessageListItem,
   TextArea,
-} from '../../components';
-import { SelectDuration } from './select-duration.component';
-import { AgentAuthContext, AgentChatContext } from '../../services';
-import { Durations, Message, UserDetails } from '../../services/chat/interfaces';
-import {
-  ChatList,
   ChatListArea,
   ChatMessages,
-  ChipWrapper,
   Container,
-  FilterArea,
   HorizontalContainer,
-  LogoutContainer,
   MessageArea,
   ProfileArea,
+  TypingArea,
+} from '../../components';
+import {
+  AgentAuthContext,
+  AgentChatContext,
+  Durations,
+  Message,
+  UserDetails,
+} from '../../services';
+import {
+  ChatList,
+  ChipWrapper,
+  FilterArea,
+  Profile,
   QuickResponses,
   Row,
-  TypingArea,
-} from './agent.styles';
-import { Profile } from './profile.component';
-import { ToggleMyTickets } from './toggle.component';
+  SelectDuration,
+  ToggleMyTickets,
+} from './components';
 
 export const AgentChatPage = () => {
   const { logout, agentId } = useContext(AgentAuthContext);
@@ -64,11 +56,6 @@ export const AgentChatPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredMessages, setFilteredMessages] = useState([] as Message[]);
   const [myTickets, setMytickets] = useState(false);
-  const [error, setError] = useState(chatError);
-
-  const handleClose = () => {
-    setError('');
-  };
 
   const handleSubmitMessage = async (event: any) => {
     event?.preventDefault();
@@ -83,10 +70,6 @@ export const AgentChatPage = () => {
       closeConversation(details.id);
     }
   };
-
-  useEffect(() => {
-    setError(chatError);
-  }, [chatError]);
 
   useEffect(() => {
     let filtered = [...messages];
@@ -174,45 +157,8 @@ export const AgentChatPage = () => {
   return (
     <Body>
       <HorizontalContainer>
-        <AppAlert
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={!!error}
-          autoHideDuration={5000}
-          onClose={handleClose}
-        >
-          {error ? (
-            <Alert
-              severity="error"
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => handleClose()}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              <AlertTitle>{chatError}</AlertTitle>
-            </Alert>
-          ) : (
-            <div />
-          )}
-        </AppAlert>
-        <LogoutContainer>
-          <Link href="/agents/login" underline="none">
-            <Button
-              onClick={() => {
-                logout();
-              }}
-              startIcon={<PowerSettingsNew />}
-              variant="text"
-            >
-              Logout
-            </Button>
-          </Link>
-        </LogoutContainer>
+        <ErrorAlert errorMessage={chatError} />
+        <LogoutButton path="/agents/login" logout={logout} />
         <ChatListArea>
           <FilterArea>
             <Row>
@@ -244,12 +190,6 @@ export const AgentChatPage = () => {
             <p ref={messagesEndRef} />
           </MessageArea>
           <TypingArea>
-            <label htmlFor="icon-button-file">
-              <FileInput accept="image/*" id="icon-button-file" type="file" />
-              <IconButton color="primary" aria-label="upload picture" component="span">
-                <AttachFile />
-              </IconButton>
-            </label>
             <TextArea
               fullWidth
               size="small"

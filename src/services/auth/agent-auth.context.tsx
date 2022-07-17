@@ -13,7 +13,7 @@ import { Action, Props } from '../types';
 
 const initialState = {
   isLoading: false,
-  isError: false,
+  error: '',
 } as AgentAuthData;
 
 // eslint-disable-next-line default-param-last
@@ -43,7 +43,7 @@ export const AgentAuthContext = createContext({} as AgentAuthProps);
 
 export const AgentAuthProvider = ({ children }: Props) => {
   const [state, dispatch] = useReducer(reducer as AgentAuthReducer, initialState);
-  const { agentId, isLoading, error, isError } = state;
+  const { agentId, isLoading, error } = state;
 
   const register = async (data: RegistrationData) => {
     dispatch({ type: START_API_CALL, payload: null });
@@ -76,12 +76,11 @@ export const AgentAuthProvider = ({ children }: Props) => {
       isLoading,
       agentId,
       error,
-      isError,
       register,
       login,
       logout,
     }),
-    [isError, isLoading, agentId, error],
+    [isLoading, agentId, error],
   );
 
   return <AgentAuthContext.Provider value={value}>{children}</AgentAuthContext.Provider>;
