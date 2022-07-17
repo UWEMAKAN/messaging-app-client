@@ -1,5 +1,5 @@
 /* eslint-disable react/function-component-definition */
-import { RootNavigator } from './root.navigation';
+import { RootNavigator } from './root.navigator';
 import {
   AgentAuthProvider,
   AgentChatProvider,

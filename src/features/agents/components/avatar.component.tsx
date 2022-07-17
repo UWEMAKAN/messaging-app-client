@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
-import { stringToColor } from '../../components';
+import { stringToColor } from '../../../components';
 
 interface Props {
   firstName: string;
